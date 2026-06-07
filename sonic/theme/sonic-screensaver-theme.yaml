@@ -1,0 +1,67 @@
+# Sonic NSPanel — Screensaver theme (dark blue / black / gray)
+#
+# Format: [R, G, B], each 0-255. The backend packs these into RGB565 before sending to the panel.
+# Keys match upstream screensaver theme keys (see:
+#   appdaemon/screensaver-theme-include/screensaver-theme.yaml
+#   apps/nspanel-lovelace-ui/luibackend/theme.py).
+#
+# Include this from a panel's `screensaver.theme:` (see sonic/config/apps.sonic.example.yaml).
+# Palette source of truth: sonic/theme/palette.md
+#
+# Intent: black canvas, blue identity accent, gray for ambient text. Studio control surface.
+
+# --- Canvas ---
+background:        [6, 10, 16]       # sonic-bg (near-black blue). Use [0,0,0] for true black.
+
+# --- Clock / date ---
+time:             [224, 228, 234]    # text-primary
+timeAMPM:         [150, 160, 172]    # text-secondary
+date:             [150, 160, 172]    # text-secondary
+
+# --- Main weather (current) ---
+tMainIcon:        [64, 196, 255]     # accent-cyan (live data highlight)
+tMainText:        [224, 228, 234]    # text-primary
+
+# --- Forecast labels ---
+tForecast1:       [150, 160, 172]
+tForecast2:       [150, 160, 172]
+tForecast3:       [150, 160, 172]
+tForecast4:       [150, 160, 172]
+
+# --- Forecast icons ---
+tF1Icon:          [56, 139, 222]     # accent-blue
+tF2Icon:          [56, 139, 222]
+tF3Icon:          [56, 139, 222]
+tF4Icon:          [56, 139, 222]
+
+# --- Forecast values ---
+tForecast1Val:    [224, 228, 234]
+tForecast2Val:    [224, 228, 234]
+tForecast3Val:    [224, 228, 234]
+tForecast4Val:    [224, 228, 234]
+
+# --- Divider bar ---
+bar:              [20, 26, 34]       # sonic-surface (subtle separator)
+
+# --- Bottom status row (e.g. humidity) ---
+tMRIcon:          [56, 139, 222]     # accent-blue
+tMR:              [150, 160, 172]    # text-secondary
+
+# --- autoWeather: tint the main weather icon by condition. ---
+# Off by default to keep the cyan accent consistent. Uncomment to enable condition-based color.
+#autoWeather: true
+#clear-night:      [80, 110, 150]
+#cloudy:           [90, 100, 112]
+#exceptional:      [223, 76, 30]     # critical-red
+#fog:              [110, 120, 132]   # inactive-gray
+#hail:             [200, 215, 230]
+#lightning:        [245, 180, 60]    # warn-amber
+#lightning-rainy:  [200, 180, 120]
+#partlycloudy:     [120, 140, 165]
+#pouring:          [40, 110, 200]
+#rainy:            [64, 150, 220]
+#snowy:            [200, 215, 230]
+#snowy-rainy:      [150, 180, 220]
+#sunny:            [64, 196, 255]    # accent-cyan (Sonic take on "sunny")
+#windy:            [120, 130, 145]
+#windy-variant:    [150, 140, 140]

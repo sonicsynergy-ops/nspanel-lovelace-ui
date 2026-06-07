@@ -1,0 +1,85 @@
+---
+# Sonic NSPanel — SAMPLE AppDaemon config (apps.yaml format)
+#
+# This is a REFERENCE artifact, not a live config. It shows how the Sonic theme wires into a
+# panel. Do NOT drop this onto a running AppDaemon as-is:
+#   - replace the MQTT topics with your panel's real Tasmota topic
+#   - replace every entity_id with real Home Assistant entities
+#   - adjust the `!include` path to where this repo's theme file lives in your AppDaemon /config
+#
+# Palette + tokens:        sonic/theme/palette.md
+# Screensaver theme:       sonic/theme/sonic-screensaver-theme.yaml
+# Architecture / boundaries: docs/sonic-custom-ui-plan.md
+#
+# Boundary reminder: applying this to live HA/AppDaemon is a later, Atlas-approved step.
+# Nothing here flashes the device or changes firmware.
+
+nspanel-sonic-1:
+  module: nspanel-lovelace-ui
+  class: NsPanelLovelaceUIManager
+  config:
+    # --- MQTT plumbing (PLACEHOLDERS — set to your real Tasmota topic) ---
+    panelRecvTopic: "tele/tasmota_REPLACE_ME/RESULT"
+    panelSendTopic: "cmnd/tasmota_REPLACE_ME/CustomSend"
+
+    # --- Global Sonic look ---
+    # Near-black blue canvas. Use "black" or [0,0,0] for true black; "ha-dark" is the upstream default.
+    defaultBackgroundColor: [6, 10, 16]   # sonic-bg
+
+    model: "eu"            # set "us" for US hardware
+    sleepTimeout: 20
+    sleepBrightness: 15    # dim, studio-surface feel
+    screenBrightness: 90
+    locale: "en_US"
+    timeFormat: "%H:%M"
+
+    # --- Screensaver: Sonic palette via include ---
+    screensaver:
+      entity: weather.REPLACE_ME
+      # Adjust this path to your AppDaemon layout. In this repo the source of truth is:
+      #   sonic/theme/sonic-screensaver-theme.yaml
+      theme: !include sonic-screensaver-theme.yaml
+
+    # --- Cards: utility-first, low clutter ---
+    # Per-entity `color` overrides demonstrate the Sonic active/idle system:
+    #   accent-blue [56,139,222] = active/on,  inactive-gray [110,120,132] = off/idle.
+    cards:
+      - type: cardGrid
+        title: "CONTROL"
+        entities:
+          - entity: light.studio_key
+            name: "Key Light"
+            icon: "mdi:lightbulb"
+            color: [56, 139, 222]      # accent-blue
+          - entity: switch.studio_monitors
+            name: "Monitors"
+            icon: "mdi:monitor"
+            color: [56, 139, 222]
+          - entity: switch.studio_rack
+            name: "Rack"
+            icon: "mdi:server"
+            color: [110, 120, 132]     # inactive-gray
+          - entity: scene.studio_focus
+            name: "Focus"
+            icon: "mdi:target"
+            color: [64, 196, 255]      # accent-cyan
+
+      - type: cardEntities
+        title: "STATUS"
+        entities:
+          - entity: sensor.studio_temp
+            name: "Temp"
+            icon: "mdi:thermometer"
+            color: [150, 160, 172]     # text-secondary
+          - entity: sensor.studio_power
+            name: "Power Draw"
+            icon: "mdi:flash"
+            color: [64, 196, 255]      # accent-cyan (live data)
+          - entity: binary_sensor.studio_door
+            name: "Door"
+            icon: "mdi:door"
+            # no override: lets backend status logic apply (tune later in Tier-2 palette patch)
+          - entity: sensor.studio_humidity
+            name: "Humidity"
+            icon: "mdi:water-percent"
+            color: [150, 160, 172]
