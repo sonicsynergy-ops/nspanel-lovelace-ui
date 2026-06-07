@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sonic NSPanel — Preview v3</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+
+  <!-- inline icon system (minimal line symbols, no external deps) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="ic-light" viewBox="0 0 24 24"><path d="M9.5 18h5M10.5 21h3M12 3a6 6 0 0 0-3.8 10.7c.6.5.9 1.2.9 2H15c0-.8.3-1.5.9-2A6 6 0 0 0 12 3Z"/></symbol>
+      <symbol id="ic-monitor" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="1.2"/><circle cx="12" cy="14" r="3.4"/><circle cx="12" cy="7" r="1.1"/></symbol>
+      <symbol id="ic-rack" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9.3h16M4 14.6h16M6.6 6.6h.01M6.6 11.9h.01M6.6 17.2h.01"/></symbol>
+      <symbol id="ic-focus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.8"/><circle cx="12" cy="12" r="2.3"/><path d="M12 2.4v3M12 18.6v3M2.4 12h3M18.6 12h3"/></symbol>
+      <symbol id="ic-climate" viewBox="0 0 24 24"><path d="M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0Z"/><path d="M12 9v5.4"/></symbol>
+      <symbol id="ic-door" viewBox="0 0 24 24"><path d="M6 21V4.5A1.5 1.5 0 0 1 7.5 3h7A1.5 1.5 0 0 1 16 4.5V21M4 21h16"/><path d="M12.8 12h.01"/></symbol>
+      <symbol id="ic-power" viewBox="0 0 24 24"><path d="M13 2.5 5 13.5h6l-1 8 8-11h-6l1-8Z"/></symbol>
+      <symbol id="ic-humidity" viewBox="0 0 24 24"><path d="M12 3.2s5.6 6.1 5.6 10.4a5.6 5.6 0 1 1-11.2 0C6.4 9.3 12 3.2 12 3.2Z"/></symbol>
+      <symbol id="ic-home" viewBox="0 0 24 24"><path d="M3.5 11.5 12 4l8.5 7.5M5.5 10V20h13V10M10 20v-5h4v5"/></symbol>
+      <symbol id="ic-scene" viewBox="0 0 24 24"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="1.9"/><circle cx="7" cy="16" r="1.9"/></symbol>
+      <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 3 7.7 7 9 4-1.3 7-4.4 7-9V6l-7-3Z"/><path d="m9.2 11.8 1.9 2 3.7-3.9"/></symbol>
+      <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="ic-motion" viewBox="0 0 24 24"><circle cx="9" cy="12" r="2"/><path d="M13 8a6 6 0 0 1 0 8M15.5 6a9 9 0 0 1 0 12"/></symbol>
+      <symbol id="ic-net" viewBox="0 0 24 24"><rect x="8.5" y="3" width="7" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v3M6 16v-2.5h12V16"/></symbol>
+      <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v3M12 18.4v3M21.4 12h-3M5.6 12h-3M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1M18.4 18.4l-2.1-2.1M7.7 7.7 5.6 5.6"/></symbol>
+      <symbol id="ic-wifi" viewBox="0 0 24 24"><path d="M2.8 9a14 14 0 0 1 18.4 0M5.8 12.4a9 9 0 0 1 12.4 0M8.8 15.8a4.5 4.5 0 0 1 6.4 0"/><circle cx="12" cy="19" r="1"/></symbol>
+      <symbol id="ic-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.4"/><path d="M12 10.6c-.6-2.4.2-4.8 2-5.8 1.1 1.7.7 4.3-2 5.8M13.4 12c2.4-.6 4.8.2 5.8 2-1.7 1.1-4.3.7-5.8-2M12 13.4c.6 2.4-.2 4.8-2 5.8-1.1-1.7-.7-4.3 2-5.8M10.6 12c-2.4.6-4.8-.2-5.8-2 1.7-1.1 4.3-.7 5.8 2"/></symbol>
+      <symbol id="ic-battery" viewBox="0 0 24 24"><rect x="3" y="8" width="16" height="9" rx="1.6"/><path d="M21 11v3"/><path d="M6 11v3M9 11v3M12 11v3"/></symbol>
+      <symbol id="ic-bright" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.1 5.1 6.8 6.8M17.2 17.2l1.7 1.7M18.9 5.1 17.2 6.8M6.8 17.2l-1.7 1.7"/></symbol>
+      <symbol id="ic-chevron" viewBox="0 0 24 24"><path d="M9 5.5 15.5 12 9 18.5"/></symbol>
+      <symbol id="ic-interface" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="1.6"/><circle cx="8.5" cy="12" r="2"/><circle cx="14.5" cy="12" r="2"/><path d="M8.5 9.4V12M14.5 9.4V12"/></symbol>
+      <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.4V12l3 2"/></symbol>
+      <symbol id="ic-reboot" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-.8 4.5"/><path d="M20 5v5h-5"/></symbol>
+      <symbol id="ic-update" viewBox="0 0 24 24"><path d="M12 3v11M7.5 9.5 12 14l4.5-4.5M5 19h14"/></symbol>
+    </defs>
+  </svg>
+
+  <header class="page-head">
+    <h1><b>SONIC</b> NSPANEL · PREVIEW v3</h1>
+    <p>320 × 480 portrait screen map · studio control surface · static, no dependencies</p>
+  </header>
+
+  <nav class="nav">
+    <a href="#s01"><b>01</b> Screensaver</a>
+    <a href="#s02"><b>02</b> Home</a>
+    <a href="#s03"><b>03</b> Scenes</a>
+    <a href="#s04"><b>04</b> Lights</a>
+    <a href="#s05"><b>05</b> Climate</a>
+    <a href="#s06"><b>06</b> Session</a>
+    <a href="#s07"><b>07</b> Security</a>
+    <a href="#s08"><b>08</b> Power</a>
+    <a href="#s09"><b>09</b> Settings</a>
+  </nav>
+
+  <main class="stage">
+
+    <!-- ============ 01 SCREENSAVER ============ -->
+    <section class="unit" id="s01">
+      <div class="cap"><span>01 · Screensaver / Idle</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top">
+            <span class="brand">SONIC <span>SYNERGY</span></span>
+            <span class="rail-side"><i class="dot ok"></i>ROOM A</span>
+          </div>
+          <div class="content ss">
+            <div class="ss-clockwrap">
+              <div class="ss-clock">16:27</div>
+              <div class="ss-date">Sun · 07 Jun 2026</div>
+            </div>
+            <div class="ss-tele">
+              <div class="tele"><span class="ml">Climate</span><span class="v">23.0°</span></div>
+              <div class="tele"><span class="ml">Humidity</span><span class="v">41%</span></div>
+              <div class="tele"><span class="ml">Noise</span><span class="v cyan">38 dB</span></div>
+              <div class="tele"><span class="ml">Power</span><span class="v">0.4 kW</span></div>
+            </div>
+            <div></div>
+            <div class="ss-signal">
+              <span class="ml">Noise Floor</span>
+              <svg class="wave" viewBox="0 0 280 26" preserveAspectRatio="none">
+                <path class="base" d="M0 13 H280"/>
+                <path d="M0 13 L20 12 L40 14 L60 10 L80 13 L100 8 L120 14 L140 6 L160 13 L180 10 L200 14 L220 11 L240 13 L260 9 L280 13"/>
+              </svg>
+              <span class="ss-nf">38 dB(A)</span>
+            </div>
+            <div class="ss-status">
+              <span class="statusword"><i class="dot cyan"></i><b>STUDIO READY</b></span>
+              <span class="ss-mode">Quiet</span>
+            </div>
+          </div>
+          <div class="r-bot"><span>Sonic Synergy Studio</span><span class="rail-side"><i class="dot"></i>Idle</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 02 HOME / MENU ============ -->
+    <section class="unit" id="s02">
+      <div class="cap"><span>02 · Home / Main Menu</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">HOME</span><span class="rail-side"><i class="dot ok"></i>ROOM A</span></div>
+          <div class="content" style="padding:0">
+            <div class="menu">
+              <div class="mz">
+                <div class="mz-top"><span class="mzic"><svg class="ic"><use href="#ic-scene"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Scenes</div><div class="mz-sub">Tracking</div></div>
+              </div>
+              <div class="mz">
+                <div class="mz-top"><span class="mzic blue"><svg class="ic"><use href="#ic-light"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Lights</div><div class="mz-sub">4 / 6 on</div></div>
+              </div>
+              <div class="mz">
+                <div class="mz-top"><span class="mzic"><svg class="ic"><use href="#ic-climate"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Climate</div><div class="mz-sub">21.0° · cool</div></div>
+              </div>
+              <div class="mz">
+                <div class="mz-top"><span class="mzic"><svg class="ic"><use href="#ic-focus"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Session</div><div class="mz-sub">Tracking</div></div>
+              </div>
+              <div class="mz">
+                <div class="mz-top"><span class="mzic ok"><svg class="ic"><use href="#ic-shield"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Security</div><div class="mz-sub ok">Armed</div></div>
+              </div>
+              <div class="mz">
+                <div class="mz-top"><span class="mzic"><svg class="ic"><use href="#ic-power"/></svg></span><span class="chev"><svg class="ic"><use href="#ic-chevron"/></svg></span></div>
+                <div><div class="mz-name">Power</div><div class="mz-sub">0.42 kW</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="r-bot"><span>Main Menu</span><span class="rail-side"><i class="dot cyan"></i>Online</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 03 SCENES ============ -->
+    <section class="unit" id="s03">
+      <div class="cap"><span>03 · Scenes</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">SCENES</span><span class="rail-side"><i class="dot cyan"></i>Tracking</span></div>
+          <div class="content scenes">
+            <div class="scn act">
+              <span class="tag"><i class="dot cyan"></i>Active</span>
+              <span class="idx">01</span><div class="nm">Tracking</div><span class="ds">Live · low noise</span>
+            </div>
+            <div class="scn"><span class="idx">02</span><div class="nm">Mixing</div><span class="ds">Dim · focus</span></div>
+            <div class="scn"><span class="idx">03</span><div class="nm">Vocal</div><span class="ds">Booth warm</span></div>
+            <div class="scn"><span class="idx">04</span><div class="nm">Podcast</div><span class="ds">Table · talk</span></div>
+            <div class="scn"><span class="idx">05</span><div class="nm">Cleanup</div><span class="ds">Full bright</span></div>
+            <div class="scn"><span class="idx">06</span><div class="nm">Away</div><span class="ds">Off · armed</span></div>
+          </div>
+          <div class="r-bot"><span class="rail-side"><i class="dot cyan"></i>01 Active</span><span>6 Presets</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 04 LIGHTS ============ -->
+    <section class="unit" id="s04">
+      <div class="cap"><span>04 · Lights</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">LIGHTS</span><span class="rail-side"><i class="dot blue"></i>4 / 6 ON</span></div>
+          <div class="content lights">
+            <div class="lrow">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Main Room</span><span class="lval">80%</span>
+              <div class="bar"><i style="width:80%"></i></div>
+            </div>
+            <div class="lrow off">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Booth</span><span class="lval">OFF</span>
+              <div class="bar off"><i style="width:0%"></i></div>
+            </div>
+            <div class="lrow">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Lounge</span><span class="lval">45%</span>
+              <div class="bar"><i style="width:45%"></i></div>
+            </div>
+            <div class="lrow">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Hallway</span><span class="lval">20%</span>
+              <div class="bar"><i style="width:20%"></i></div>
+            </div>
+            <div class="lrow off">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Bathroom</span><span class="lval">OFF</span>
+              <div class="bar off"><i style="width:0%"></i></div>
+            </div>
+            <div class="lrow">
+              <span class="lic"><svg class="ic"><use href="#ic-light"/></svg></span>
+              <span class="lname">Accent</span><span class="lval">60%</span>
+              <div class="bar"><i style="width:60%"></i></div>
+            </div>
+          </div>
+          <div class="r-bot"><span>Lighting</span><span class="rail-side"><i class="dot blue"></i>Room A</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 05 CLIMATE ============ -->
+    <section class="unit" id="s05">
+      <div class="cap"><span>05 · Climate</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">CLIMATE</span><span class="rail-side"><i class="dot blue"></i>Cool</span></div>
+          <div class="content clm">
+            <div class="clm-head">
+              <div class="col"><span class="ml">Current</span><div class="clm-big">21.0<small>°C</small></div></div>
+              <div class="col"><span class="ml">Target</span><div class="clm-big target">20.5<small>°C</small></div></div>
+            </div>
+            <div class="clm-ctl">
+              <span class="ml">Mode</span>
+              <div class="seg"><span>Off</span><span class="act">Cool</span><span>Heat</span><span>Auto</span><span>Fan</span></div>
+            </div>
+            <div class="clm-ctl">
+              <span class="ml">Fan</span>
+              <div class="seg"><span>Auto</span><span>Low</span><span class="act">Med</span><span>High</span></div>
+            </div>
+            <div></div>
+            <div class="ses-strip">
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-humidity"/></svg></span><span class="txt"><span class="ml">Humidity</span><span class="v">41%</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-fan"/></svg></span><span class="txt"><span class="ml">Airflow</span><span class="v">320 m³/h</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-climate"/></svg></span><span class="txt"><span class="ml">Coil</span><span class="v">12.4°</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-clock"/></svg></span><span class="txt"><span class="ml">Filter</span><span class="v ok">OK</span></span></div>
+            </div>
+          </div>
+          <div class="r-bot"><span>HVAC · Room A</span><span class="rail-side"><i class="dot blue"></i>Cooling</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 06 SESSION ============ -->
+    <section class="unit" id="s06">
+      <div class="cap"><span>06 · Session</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">SESSION</span><span class="rail-side"><i class="dot cyan"></i>Tracking</span></div>
+          <div class="content ses">
+            <div class="ses-head">
+              <div class="col"><span class="ml">Session Mode</span><span class="big"><i class="dot cyan"></i>TRACKING</span></div>
+              <div class="col"><span class="ml">Room Mode</span><span class="big"><i class="dot ok"></i>LIVE</span></div>
+            </div>
+            <div class="ses-meter">
+              <div class="meter-head"><span class="ml">Noise Floor</span><span class="meter-val"><b>38</b><span>dB(A) · pk 41</span></span></div>
+              <div class="meter">
+                <div class="meter-track"></div><div class="meter-fill"></div>
+                <div class="meter-tick warn"></div><div class="meter-tick crit"></div><div class="meter-peak"></div>
+              </div>
+              <div class="meter-scale"><span>20</span><span>30</span><span>40</span><span>50</span><span>60</span><span class="warn">70</span><span>80</span><span class="crit">90</span></div>
+            </div>
+            <div></div>
+            <div class="ses-strip">
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-power"/></svg></span><span class="txt"><span class="ml">Power</span><span class="v">0.42 kW</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-climate"/></svg></span><span class="txt"><span class="ml">Climate</span><span class="v">21.0°</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-humidity"/></svg></span><span class="txt"><span class="ml">Humidity</span><span class="v">41%</span></span></div>
+              <div class="scell"><span class="sic"><svg class="ic"><use href="#ic-door"/></svg></span><span class="txt"><span class="ml">Door</span><span class="v ok">SECURE</span></span></div>
+            </div>
+          </div>
+          <div class="r-bot"><span>Sonic Synergy Studio</span><span class="rail-side"><i class="dot cyan"></i>Room A</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 07 SECURITY ============ -->
+    <section class="unit" id="s07">
+      <div class="cap"><span>07 · Security / Doors</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">SECURITY</span><span class="rail-side"><i class="dot warn"></i>1 Alert</span></div>
+          <div class="content sec">
+            <div class="sec-banner">
+              <span class="shield"><svg class="ic"><use href="#ic-shield"/></svg></span>
+              <span><div class="sec-state">Armed</div><div class="sec-sub">Away Mode · Perimeter</div></span>
+              <span class="pill cyan">ON</span>
+            </div>
+            <div class="sec-list">
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-door"/></svg></span><span><span class="srn">Main Door</span><span class="srsub">Entry</span></span><span class="pill ok">Secure</span></div>
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-door"/></svg></span><span><span class="srn">Booth Door</span><span class="srsub">Live room</span></span><span class="pill ok">Secure</span></div>
+              <div class="srow"><span class="sric warn"><svg class="ic"><use href="#ic-door"/></svg></span><span><span class="srn">Lounge Door</span><span class="srsub">Side</span></span><span class="pill warn">Open</span></div>
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-lock"/></svg></span><span><span class="srn">Rack</span><span class="srsub">Cabinet</span></span><span class="pill ok">Locked</span></div>
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-motion"/></svg></span><span><span class="srn">Motion</span><span class="srsub">Hall PIR</span></span><span class="pill ok">Clear</span></div>
+              <div class="srow"><span class="sric cyan"><svg class="ic"><use href="#ic-shield"/></svg></span><span><span class="srn">Alarm</span><span class="srsub">System</span></span><span class="pill cyan">Armed</span></div>
+            </div>
+          </div>
+          <div class="r-bot"><span>Perimeter</span><span class="rail-side"><i class="dot warn"></i>Lounge Open</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 08 POWER / RACK ============ -->
+    <section class="unit" id="s08">
+      <div class="cap"><span>08 · Power / Rack</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">POWER</span><span class="rail-side"><i class="dot ok"></i>On-Line</span></div>
+          <div class="content pwr">
+            <div class="pwr-total">
+              <div class="head"><span class="ml">Total Draw</span><span class="big"><b>412</b><span>W</span></span></div>
+              <div class="bar"><i style="width:34%"></i></div>
+              <div class="pwr-cap">34% of 1.2 kW circuit · UPS on-line</div>
+            </div>
+            <div class="pwr-list">
+              <div class="srow"><span class="sric cyan"><svg class="ic"><use href="#ic-rack"/></svg></span><span><span class="srn">Rack</span><span class="srsub">Online</span></span><span class="srval"><i class="dot cyan"></i>180 W</span></div>
+              <div class="srow"><span class="sric cyan"><svg class="ic"><use href="#ic-monitor"/></svg></span><span><span class="srn">Monitors</span><span class="srsub">On</span></span><span class="srval"><i class="dot cyan"></i>90 W</span></div>
+              <div class="srow"><span class="sric cyan"><svg class="ic"><use href="#ic-interface"/></svg></span><span><span class="srn">Interface</span><span class="srsub">On</span></span><span class="srval"><i class="dot cyan"></i>12 W</span></div>
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-net"/></svg></span><span><span class="srn">Network</span><span class="srsub">Online</span></span><span class="srval"><i class="dot ok"></i>8 W</span></div>
+              <div class="srow"><span class="sric ok"><svg class="ic"><use href="#ic-battery"/></svg></span><span><span class="srn">UPS</span><span class="srsub">On-line</span></span><span class="srval"><i class="dot ok"></i>100%</span></div>
+              <div class="srow"><span class="sric warn"><svg class="ic"><use href="#ic-climate"/></svg></span><span><span class="srn">Rack Temp</span><span class="srsub">Cabinet</span></span><span class="srval">28.4°</span></div>
+            </div>
+          </div>
+          <div class="r-bot"><span>System Status</span><span class="rail-side"><i class="dot ok"></i>Nominal</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+    <!-- ============ 09 SETTINGS / SYSTEM ============ -->
+    <section class="unit" id="s09">
+      <div class="cap"><span>09 · Settings / System</span><b>320 × 480</b></div>
+      <div class="bezel">
+        <div class="screen">
+          <div class="r-top"><span class="brand">SETTINGS</span><span class="rail-side"><i class="dot ok"></i>System OK</span></div>
+          <div class="content set">
+            <div class="set-block">
+              <div class="set-row">
+                <span class="lbl"><svg class="ic"><use href="#ic-bright"/></svg><span class="name">Brightness</span></span>
+                <span class="val">90%</span>
+              </div>
+              <div class="set-bright"><div class="bar"><i style="width:90%"></i></div><span class="val" style="text-align:right">90</span></div>
+            </div>
+            <div class="set-block">
+              <div class="set-row">
+                <span class="lbl"><svg class="ic"><use href="#ic-clock"/></svg><span class="name">Sleep Timeout</span></span>
+                <span class="val">20 s</span>
+              </div>
+              <div class="seg"><span>10</span><span class="act">20</span><span>30</span><span>60</span><span>Off</span></div>
+            </div>
+            <div class="set-status">
+              <div class="srow"><span class="srn">Wi-Fi</span><span class="srval"><i class="dot ok"></i>−52 dBm</span></div>
+              <div class="srow"><span class="srn">MQTT</span><span class="srval"><i class="dot ok"></i>Connected</span></div>
+              <div class="srow"><span class="srn">Backend</span><span class="srval"><i class="dot ok"></i>AppDaemon</span></div>
+            </div>
+            <div>
+              <div class="set-actions">
+                <span class="btn disabled"><svg class="ic"><use href="#ic-reboot"/></svg>Reboot</span>
+                <span class="btn disabled"><svg class="ic"><use href="#ic-update"/></svg>Update</span>
+              </div>
+              <div class="set-note" style="margin-top:9px">Visual only · actions disabled in preview</div>
+            </div>
+          </div>
+          <div class="r-bot"><span>NSPanel · FW 1.0-sonic</span><span class="rail-side"><i class="dot ok"></i>v3 preview</span></div>
+        </div>
+        <div class="etch">NSPANEL · 320×480 · PORTRAIT</div>
+      </div>
+    </section>
+
+  </main>
+</body>
+</html>
